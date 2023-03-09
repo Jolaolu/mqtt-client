@@ -1,6 +1,6 @@
 <template>
     <div class="connection">
-       <h1 class="connection-header">Connection</h1>
+        <h1 class="connection-header">Connection</h1>
         <form class="connection-form">
             <div class="connection-hostname">
                 <base-input :model-value="hostName" input-name="hostname" label="Hostname"
@@ -22,7 +22,7 @@ import { ref, computed } from 'vue'
 import BaseButton from '@/components/form-elements/BaseButton.vue';
 import BaseInput from '@/components/form-elements/BaseInput.vue';
 import { isEmptyValue } from '~/helpers'
-import { useMqtt } from '@/services';
+import { mqttManager } from '@/plugins/index'
 export default {
     emits: ['go-to-next'],
     components: {
@@ -33,7 +33,7 @@ export default {
         const userName = ref<string>('')
         const password = ref<string>('')
         const hostName = ref<string>('')
-        const mqtt = useMqtt()
+        const mqtt = mqttManager()
 
         const isSubmitButtonDisabled = computed((): boolean => {
             return (
@@ -45,10 +45,16 @@ export default {
 
         const connectToBroker = (): void => {
             mqtt.connect({
+                hostname: hostName.value,
                 username: userName.value,
                 password: password.value
+            }).then(() => {
+                emit('go-to-next')
+            }).catch(() => {
+
             })
-            // emit('go-to-next')
+
+
         }
 
         return {

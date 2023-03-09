@@ -4,8 +4,8 @@
         <div class="message-input_wrapper">
             <base-input class="message-input" :model-value="messageTopic" input-name="topic" label="Topic"
                 @update:modelValue="(newValue: string) => (messageTopic = newValue)" />
-            <base-select class="message-select" label="Quality of Service" :model-value="qualityOfService"
-                :select-options="selectOptions" />
+            <base-select class="message-select" label="Quality of Service" :model-value="qualityOfService!"
+                @update:modelValue="(newValue: IQos) => (qualityOfService = newValue)" :select-options="selectOptions" />
         </div>
         <textarea class="message-textarea" v-model="messageBody" placeholder="Message Body" />
 
@@ -13,7 +13,7 @@
             <base-button class="message-button" :disabled="isPublishButtonDisabled" @click="publishMessage">Publish
                 Message</base-button>
         </div>
-        <messages-table />
+        <messages-table :published-items="incomingMessages" />
     </div>
 </template>
 <script lang="ts">
@@ -24,6 +24,8 @@ import BaseInput from '@/components/form-elements/BaseInput.vue';
 import MessagesTable from './MessagesTable.vue';
 import { isEmptyValue } from '~/helpers'
 import { selectOptions } from '@/static/store'
+import { mqttManager } from '@/plugins/index'
+import type { IQos } from "@/plugins/index.model"
 export default {
     components: {
         BaseButton,
@@ -34,7 +36,9 @@ export default {
     setup() {
         const messageBody = ref<string>('')
         const messageTopic = ref<string>('')
-        const qualityOfService = ref<string>('')
+        const qualityOfService = ref<IQos>(0)
+        const incomingMessages = ref<Record<number, any>>({})
+        const mqtt = mqttManager()
 
         const isPublishButtonDisabled = computed((): boolean => {
             return (
@@ -44,10 +48,29 @@ export default {
         })
 
         const publishMessage = (): void => {
-
+            mqtt.publish(
+                messageTopic.value,
+                messageBody.value,
+                qualityOfService.value,
+            ).then(() => {
+                mqtt.registerEvent(messageTopic.value, setMessages)
+            }).catch(() => {
+                console.log('error')
+            })
+        }
+        const clearInput = ():void => {
+            messageTopic.value = ''
+            messageBody.value = ''
+            qualityOfService.value = 0
+        }
+        const setMessages = (topic: string, message: string): void => {
+            let index = Object.keys(incomingMessages.value).length + 1
+            incomingMessages.value[index] = { topic, message: message.toString(), qos: qualityOfService.value }
+            clearInput()
         }
 
         return {
+            incomingMessages,
             isPublishButtonDisabled,
             messageBody,
             messageTopic,
@@ -109,6 +132,7 @@ export default {
         background-color: #000000;
         padding: 1.2rem 4.2rem;
         border-radius: 0.4rem;
+
         &:hover {
             opacity: 0.7;
         }

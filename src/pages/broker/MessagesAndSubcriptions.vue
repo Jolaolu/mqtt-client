@@ -3,11 +3,12 @@
         <topic-subscription />
         <message-publishing />
         <section class="disconnect-wrapper">
-            <base-button class="disconnect" @click="$emit('go-back')">Disconnect</base-button>
+            <base-button class="disconnect" @click="disconnect">Disconnect</base-button>
         </section>
     </div>
 </template>
 <script lang="ts">
+import { mqttManager } from '@/plugins/index'
 import BaseButton from '@/components/form-elements/BaseButton.vue';
 import MessagePublishing from './message-flow/MessagePublishing.vue';
 import TopicSubscription from './TopicSubscription.vue';
@@ -16,6 +17,17 @@ export default {
         BaseButton,
         MessagePublishing,
         TopicSubscription
+    },
+    setup(_, { emit }) {
+        const mqtt = mqttManager()
+
+        const disconnect = () => {
+            mqtt.disconnect()
+            emit('go-back')
+        }
+        return {
+            disconnect
+        }
     }
 }
 </script>
@@ -38,7 +50,9 @@ export default {
     }
 
     &-wrapper {
+        margin-top: 5rem;
         display: flex;
         justify-content: center;
     }
-}</style>
+}
+</style>

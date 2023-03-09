@@ -1,5 +1,5 @@
 <template>
-    <div class="empty" v-if="isEmptyValue(items)">
+    <div class="empty" v-if="isEmptyValue(publishedItems)">
         You dont have any messages to display
     </div>
     <table v-else class="table">
@@ -11,14 +11,12 @@
             </tr>
         </thead>
         <tbody class="table-body">
-            <tr class="table-body__row" v-for="(rates, index) in Object.keys(items.ratesTable)" :key="index">
-                <td class="table-body__item">{{ rates }} Years</td>
-                <td class="table-body__item">{{ items.ratesTable[rates].monthlyRate }}€</td>
+            <tr class="table-body__row" v-for="(item, index) in Object.keys(publishedItems)" :key="index">
+                <td class="table-body__item">{{ index + 1 }} </td>
+                <td class="table-body__item">{{ publishedItems[index + 1].message }}</td>
+                <td class="table-body__item">{{ publishedItems[index + 1].topic }}</td>
                 <td class="table-body__item">
-
-                </td>
-                <td class="table-body__item">
-
+                    {{ publishedItems[index + 1].qos }}
                 </td>
             </tr>
         </tbody>
@@ -26,13 +24,15 @@
 </template>
 <script lang="ts">
 import { tableHeader } from '@/static/store'
+import type { PropType } from 'vue'
 import { isEmptyValue } from '~/helpers'
+import type { IPublishedItem } from "~/static/index.model"
 export default {
     components: {
     },
     props: {
-        items: {
-            type: Object,
+        publishedItems: {
+            type: Object as PropType<IPublishedItem>,
             default: () => { }
         }
     },
@@ -47,6 +47,7 @@ export default {
 </script>
 <style lang="scss">
 .table {
+    margin-top: 3rem;
     overflow: auto;
     width: 100%;
     max-width: 100%;
@@ -64,10 +65,9 @@ export default {
         border-width: 0px 1px 1px 1px;
         border-style: solid;
         border-color: #c4c4c4;
-        background: $primary-color;
 
         &__item {
-            padding: 1.6rem 0 1.7rem 0;
+            padding: 1.6rem 0 1.7rem 2rem;
             text-align: left;
             font-size: 1.6rem;
             font-weight: 500;
@@ -89,7 +89,7 @@ export default {
         }
 
         &__item {
-            padding: 1.6rem 0 1.3rem 0;
+            padding: 1.6rem 0 1.3rem 2rem;
             font-weight: 600;
 
             &:first-of-type {
@@ -98,7 +98,8 @@ export default {
         }
     }
 }
-.empty{
+
+.empty {
     display: flex;
     justify-content: center;
     padding: 3rem 0;

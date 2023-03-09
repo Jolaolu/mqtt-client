@@ -27,7 +27,7 @@ export default {
     MessagesAndSubcriptions
   },
   setup() {
-    const currentStep = ref(Step.MessagesAndSubscriptions)
+    const currentStep = ref(Step.Connection)
     const isLoading = ref<boolean>(true)
     const timeOut = ref<number>()
 

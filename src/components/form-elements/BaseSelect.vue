@@ -17,7 +17,7 @@ export default {
       required: true
     },
     modelValue: {
-      type: String,
+      type: Number,
       required: true
     },
     selectOptions: {
