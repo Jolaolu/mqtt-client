@@ -12,6 +12,10 @@ export default defineConfig({
       '~': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  server:{
+    strictPort: true,
+    port: 8080
+  },
   css: {
     preprocessorOptions: {
       scss: {

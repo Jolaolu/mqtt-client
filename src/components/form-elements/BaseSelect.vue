@@ -17,7 +17,7 @@ export default {
       required: true
     },
     modelValue: {
-      type: Boolean,
+      type: String,
       required: true
     },
     selectOptions: {
@@ -42,10 +42,10 @@ export default {
 <style lang="scss">
 .select {
   width: 100%;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   border-radius: 0.4rem;
-  padding: 1.2rem;
+  padding: 1.7rem 1.2rem;
   background-color: $input-background-color;
   color: $primary-text-color;
   border: 1px solid $primary-border-color;

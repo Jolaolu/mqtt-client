@@ -3,7 +3,7 @@
     <div v-if="$slots.prefix">
       <slot name="prefix"></slot>
     </div>
-    <input required="true" :name="inputName" :value="modelValue" v-bind="$attrs" type="text"
+    <input required="true" :name="inputName" :value="modelValue" type="text"
       @input="$emit('update:modelValue',($event.target as HTMLInputElement).value)" :placeholder="label"
       class="input" autocomplete="none" />
     <div v-if="$slots.suffix">
@@ -15,7 +15,7 @@
 export default {
   props: {
     modelValue: {
-      type: Number,
+      type: String,
       required: false
     },
     label: {
@@ -39,10 +39,11 @@ export default {
 .input {
   display: flex;
   width: 100%;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   outline: none;
   margin-left: 1rem;
+  height: 100%;
   background-color: transparent;
   border: none;
   color: $primary-text-color;
@@ -55,7 +56,7 @@ export default {
     display: flex;
     align-items: center;
     margin-top: 1rem;
-    height: 4.5rem;
+    height: 6rem;
     padding: 1.2rem;
     border-radius: 0.4rem;
     background-color: $input-background-color;
