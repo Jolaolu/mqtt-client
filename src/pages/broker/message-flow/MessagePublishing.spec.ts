@@ -15,6 +15,7 @@ describe('MessagePublishing', () => {
     })
 
     it('publishes messages', async () => {
+       // @ts-expect-error
         const publishSpy = vi.spyOn(wrapper.vm, 'publishMessage')
 
         await wrapper.vm.$nextTick()

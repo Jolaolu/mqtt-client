@@ -25,7 +25,6 @@
 <script lang="ts">
 import { tableHeader } from '@/static/store'
 import type { PropType } from 'vue'
-import { onMounted } from 'vue'
 import { isEmptyValue } from '~/helpers'
 import type { IPublishedItems } from "~/static/index.model"
 export default {
@@ -37,11 +36,7 @@ export default {
             default: () => { }
         }
     },
-    setup(props) {
-
-        onMounted(() => {
-            console.log(props)
-        })
+    setup() {
 
         return {
             isEmptyValue,
