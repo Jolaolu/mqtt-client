@@ -9,8 +9,9 @@
             <div class="connection-credential">
                 <base-input ref="username" class="connection-credential_input" :model-value="userName" input-name="username"
                     label="Username" @update:modelValue="(newValue: string) => (userName = newValue)" />
-                <base-input ref="password" class="connection-credential_input" :model-value="userPassword" input-name="password"
-                    label="Password" @update:modelValue="(newValue: string) => (userPassword = newValue)" />
+                <base-input ref="password" class="connection-credential_input" :model-value="userPassword"
+                    input-name="password" label="Password"
+                    @update:modelValue="(newValue: string) => (userPassword = newValue)" />
             </div>
             <base-button ref="connect" :disabled="isSubmitButtonDisabled" @click="connectToBroker"
                 class="connection-button">Connect</base-button>
@@ -19,6 +20,7 @@
 </template>
 <script lang="ts">
 import { ref, computed } from 'vue'
+import { useToast } from "vue-toastification";
 import BaseButton from '@/components/form-elements/BaseButton.vue';
 import BaseInput from '@/components/form-elements/BaseInput.vue';
 import { isEmptyValue } from '~/helpers'
@@ -34,6 +36,7 @@ export default {
         const userPassword = ref<string>('')
         const hostName = ref<string>('')
         const mqtt = mqttManager()
+        const toast = useToast();
 
         const isSubmitButtonDisabled = computed((): boolean => {
             return (
@@ -49,8 +52,10 @@ export default {
                 username: userName.value,
                 password: userPassword.value
             }).then(() => {
+                toast.success(`App connected`);
                 emit('go-to-next')
             }).catch((error) => {
+                toast.error(`Error connecting!`);
                 console.log(error)
             })
 

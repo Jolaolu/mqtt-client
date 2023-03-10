@@ -10,7 +10,8 @@
         <textarea class="message-textarea" v-model="messageBody" placeholder="Message Body" />
 
         <div class="message-button_wrapper">
-            <base-button class="message-button" ref="publish" :disabled="isPublishButtonDisabled" @click="publishMessage">Publish
+            <base-button class="message-button" ref="publish" :disabled="isPublishButtonDisabled"
+                @click="publishMessage">Publish
                 Message</base-button>
         </div>
         <messages-table :published-items="incomingMessages" />
@@ -18,6 +19,7 @@
 </template>
 <script lang="ts">
 import { ref, computed } from 'vue'
+import { useToast } from "vue-toastification";
 import BaseButton from '@/components/form-elements/BaseButton.vue';
 import BaseSelect from '@/components/form-elements/BaseSelect.vue';
 import BaseInput from '@/components/form-elements/BaseInput.vue';
@@ -39,6 +41,7 @@ export default {
         const qualityOfService = ref<IQos>(0)
         const incomingMessages = ref<Record<number, any>>({})
         const mqtt = mqttManager()
+        const toast = useToast();
 
         const isPublishButtonDisabled = computed((): boolean => {
             return (
@@ -53,12 +56,14 @@ export default {
                 messageBody.value,
                 qualityOfService.value,
             ).then(() => {
+                toast.success(`Message Published!`);
                 mqtt.registerEvent(messageTopic.value, setMessages)
             }).catch(() => {
+                toast.error(`Error publishing message!`);
                 console.log('error')
             })
         }
-        const clearInput = ():void => {
+        const clearInput = (): void => {
             messageTopic.value = ''
             messageBody.value = ''
             qualityOfService.value = 0

@@ -1,8 +1,8 @@
 <template>
     <h1 class="subscription-header">Subscription</h1>
     <div class="subscription">
-        <base-input class="subscription-input" ref="subscription-input" :model-value="subscriptionTopic" input-name="topic" label="Topic"
-            @update:modelValue="(newValue: string) => (subscriptionTopic = newValue)" />
+        <base-input class="subscription-input" ref="subscription-input" :model-value="subscriptionTopic" input-name="topic"
+            label="Topic" @update:modelValue="(newValue: string) => (subscriptionTopic = newValue)" />
         <base-button ref="subscription-button" :disabled="!subscriptionTopic" @click="subscribeToTopic"
             class="subscription-button">Subscribe</base-button>
     </div>
@@ -22,6 +22,7 @@ import BaseButton from '@/components/form-elements/BaseButton.vue';
 import BaseInput from '@/components/form-elements/BaseInput.vue';
 import ContentCard from '@/components/card/ContentCard.vue';
 import CheckMarkIcon from '@/components/icons/CheckMarkIcon.vue';
+import { useToast } from "vue-toastification";
 export default {
     components: {
         BaseButton,
@@ -33,21 +34,25 @@ export default {
         const subscriptionTopic = ref<string>('')
         const subscriptionList = ref<Record<string, number>>({})
         const mqtt = mqttManager()
+        const toast = useToast();
 
         const subscribeToTopic = (): void => {
             let index = Object.keys(subscriptionList.value).length + 1
 
             if (subscriptionTopic.value in subscriptionList.value) {
+                 toast.error(`Already subscribed to topic`);
                 return
             }
 
             mqtt.subscribe([subscriptionTopic.value]).then(() => {
                 subscriptionList.value[subscriptionTopic.value] = index
+                toast.success(`Subscribed to ${subscriptionTopic.value}`);
             })
         }
         const unsubscribeFromTopic = (topic: string): void => {
             mqtt.unSubscribe(topic).then(() => {
                 delete subscriptionList.value[topic]
+                toast.error(`Unsubscribed from ${subscriptionTopic.value}`);
             })
         }
         return {

@@ -8,6 +8,7 @@
     </div>
 </template>
 <script lang="ts">
+import { useToast } from "vue-toastification";
 import { mqttManager } from '@/plugins/index'
 import BaseButton from '@/components/form-elements/BaseButton.vue';
 import MessagePublishing from './message-flow/MessagePublishing.vue';
@@ -20,9 +21,11 @@ export default {
     },
     setup(_, { emit }) {
         const mqtt = mqttManager()
+        const toast = useToast();
 
         const disconnect = () => {
             mqtt.disconnect()
+            toast.error(`App disconnected`);
             emit('go-back')
         }
         return {
