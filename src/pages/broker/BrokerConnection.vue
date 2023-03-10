@@ -3,16 +3,16 @@
         <h1 class="connection-header">Connection</h1>
         <form class="connection-form">
             <div class="connection-hostname">
-                <base-input :model-value="hostName" input-name="hostname" label="Hostname"
+                <base-input ref="hostname" :model-value="hostName" input-name="hostname" label="Hostname"
                     @update:modelValue="(newValue: string) => (hostName = newValue)" />
             </div>
             <div class="connection-credential">
-                <base-input class="connection-credential_input" :model-value="userName" input-name="username"
+                <base-input ref="username" class="connection-credential_input" :model-value="userName" input-name="username"
                     label="Username" @update:modelValue="(newValue: string) => (userName = newValue)" />
-                <base-input class="connection-credential_input" :model-value="password" input-name="password"
-                    label="Password" @update:modelValue="(newValue: string) => (password = newValue)" />
+                <base-input ref="password" class="connection-credential_input" :model-value="userPassword" input-name="password"
+                    label="Password" @update:modelValue="(newValue: string) => (userPassword = newValue)" />
             </div>
-            <base-button :disabled="isSubmitButtonDisabled" @click="connectToBroker"
+            <base-button ref="connect" :disabled="isSubmitButtonDisabled" @click="connectToBroker"
                 class="connection-button">Connect</base-button>
         </form>
     </div>
@@ -31,14 +31,14 @@ export default {
     },
     setup(_, { emit }) {
         const userName = ref<string>('')
-        const password = ref<string>('')
+        const userPassword = ref<string>('')
         const hostName = ref<string>('')
         const mqtt = mqttManager()
 
         const isSubmitButtonDisabled = computed((): boolean => {
             return (
                 isEmptyValue(userName.value) ||
-                isEmptyValue(password.value) ||
+                isEmptyValue(userPassword.value) ||
                 isEmptyValue(hostName.value)
             )
         })
@@ -47,11 +47,11 @@ export default {
             mqtt.connect({
                 hostname: hostName.value,
                 username: userName.value,
-                password: password.value
+                password: userPassword.value
             }).then(() => {
                 emit('go-to-next')
-            }).catch(() => {
-
+            }).catch((error) => {
+                console.log(error)
             })
 
 
@@ -61,7 +61,7 @@ export default {
             connectToBroker,
             hostName,
             isSubmitButtonDisabled,
-            password,
+            userPassword,
             userName,
         }
     }
@@ -75,6 +75,11 @@ export default {
     padding: 4rem 10rem 2rem;
     box-shadow: $primary-box-shadow;
     border: 1px solid $primary-border-color;
+
+    @include screen(custom, max, 576) {
+        width: 100%;
+        padding: 4rem 2rem;
+    }
 
     &-header {
         font-weight: 600;
@@ -101,8 +106,17 @@ export default {
         width: 100%;
         margin: 2rem 0 4rem;
 
+        @include screen(custom, max, 576) {
+            flex-direction: column;
+        }
+
         &_input {
             width: 50%;
+
+            @include screen(custom, max, 576) {
+                width: 100%;
+            }
+
 
             &:nth-of-type(even) {
                 margin-left: 3rem;

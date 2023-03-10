@@ -10,6 +10,7 @@ function mountComponent(): VueWrapper {
 describe('App', () => {
   it('renders component properly', () => {
     const wrapper = mountComponent()
+    console.log(wrapper.html())
     expect(wrapper.find('home-page-stub').exists()).toBeTruthy()
   })
 })

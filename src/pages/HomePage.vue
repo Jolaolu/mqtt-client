@@ -28,12 +28,16 @@ export default {
   },
   setup() {
     const currentStep = ref(Step.Connection)
-    const isLoading = ref<boolean>(true)
     const timeOut = ref<number>()
 
 
     const goToMessagesAndSubscriptions = (): void => {
-      updateStep(Step.MessagesAndSubscriptions)
+
+      updateStep(Step.Loading)
+
+      timeOut.value = window.setTimeout(() => {
+        updateStep(Step.MessagesAndSubscriptions)
+      }, 3000)
     }
     const updateStep = (step: Step): void => {
       currentStep.value = step

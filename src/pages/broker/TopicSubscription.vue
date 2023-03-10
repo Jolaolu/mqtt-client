@@ -1,9 +1,9 @@
 <template>
     <h1 class="subscription-header">Subscription</h1>
     <div class="subscription">
-        <base-input class="subscription-input" :model-value="subscriptionTopic" input-name="topic" label="Topic"
+        <base-input class="subscription-input" ref="subscription-input" :model-value="subscriptionTopic" input-name="topic" label="Topic"
             @update:modelValue="(newValue: string) => (subscriptionTopic = newValue)" />
-        <base-button :disabled="!subscriptionTopic" @click="subscribeToTopic"
+        <base-button ref="subscription-button" :disabled="!subscriptionTopic" @click="subscribeToTopic"
             class="subscription-button">Subscribe</base-button>
     </div>
     <div class="subscription-list">
@@ -37,8 +37,8 @@ export default {
         const subscribeToTopic = (): void => {
             let index = Object.keys(subscriptionList.value).length + 1
 
-            if(subscriptionTopic.value in subscriptionList.value){
-                return 
+            if (subscriptionTopic.value in subscriptionList.value) {
+                return
             }
 
             mqtt.subscribe([subscriptionTopic.value]).then(() => {
@@ -90,10 +90,16 @@ export default {
         &:hover {
             opacity: 0.7;
         }
+
+        @include screen(custom, max, 576) {
+            font-size: 1rem;
+            padding: 1rem 2rem;
+        }
     }
 
     &-list {
         margin-top: 2rem;
+
         &_item {
             >.card-content_wrapper {
                 display: flex;
@@ -110,6 +116,11 @@ export default {
                 color: $white;
                 border: none;
                 padding: 1rem 2rem;
+
+                @include screen(custom, max, 576) {
+                    font-size: 1rem;
+                    padding: 1rem;
+                }
             }
         }
 

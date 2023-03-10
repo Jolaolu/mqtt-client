@@ -34,6 +34,10 @@ export default {
 <style lang="scss">
 .dashboard {
     padding: 0 5rem;
+
+    @include screen(custom, max, 576) {
+        padding: 0 1rem;
+    }
 }
 
 .disconnect {

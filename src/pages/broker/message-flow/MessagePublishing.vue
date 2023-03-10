@@ -2,15 +2,15 @@
     <div class="message">
         <h1 class="message-header">Messages</h1>
         <div class="message-input_wrapper">
-            <base-input class="message-input" :model-value="messageTopic" input-name="topic" label="Topic"
+            <base-input class="message-input" ref="topic" :model-value="messageTopic" input-name="topic" label="Topic"
                 @update:modelValue="(newValue: string) => (messageTopic = newValue)" />
-            <base-select class="message-select" label="Quality of Service" :model-value="qualityOfService!"
+            <base-select class="message-select" ref="qos" label="Quality of Service" :model-value="qualityOfService!"
                 @update:modelValue="(newValue: IQos) => (qualityOfService = newValue)" :select-options="selectOptions" />
         </div>
         <textarea class="message-textarea" v-model="messageBody" placeholder="Message Body" />
 
         <div class="message-button_wrapper">
-            <base-button class="message-button" :disabled="isPublishButtonDisabled" @click="publishMessage">Publish
+            <base-button class="message-button" ref="publish" :disabled="isPublishButtonDisabled" @click="publishMessage">Publish
                 Message</base-button>
         </div>
         <messages-table :published-items="incomingMessages" />

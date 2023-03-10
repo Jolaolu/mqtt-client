@@ -11,12 +11,12 @@
             </tr>
         </thead>
         <tbody class="table-body">
-            <tr class="table-body__row" v-for="(item, index) in Object.keys(publishedItems)" :key="index">
-                <td class="table-body__item">{{ index + 1 }} </td>
-                <td class="table-body__item">{{ publishedItems[index + 1].message }}</td>
-                <td class="table-body__item">{{ publishedItems[index + 1].topic }}</td>
+            <tr class="table-body__row" v-for="(item, index) in Object.values(publishedItems)" :key="index">
+                <td class="table-body__item">{{ index }} </td>
+                <td class="table-body__item">{{ item.message }}</td>
+                <td class="table-body__item">{{ item.topic }}</td>
                 <td class="table-body__item">
-                    {{ publishedItems[index + 1].qos }}
+                    {{ item.qos }}
                 </td>
             </tr>
         </tbody>
@@ -25,22 +25,29 @@
 <script lang="ts">
 import { tableHeader } from '@/static/store'
 import type { PropType } from 'vue'
+import { onMounted } from 'vue'
 import { isEmptyValue } from '~/helpers'
-import type { IPublishedItem } from "~/static/index.model"
+import type { IPublishedItems } from "~/static/index.model"
 export default {
     components: {
     },
     props: {
         publishedItems: {
-            type: Object as PropType<IPublishedItem>,
+            type: Object as PropType<IPublishedItems>,
             default: () => { }
         }
     },
-    setup() {
+    setup(props) {
+
+        onMounted(() => {
+            console.log(props)
+        })
+
         return {
             isEmptyValue,
             tableHeader,
         }
+
     }
 }
 

@@ -1,7 +1,7 @@
 import { shallowMount, VueWrapper } from '@vue/test-utils'
 import { describe, it, expect, beforeEach } from 'vitest'
 
-import { MqttResponse } from '@/static/mock'
+import { publishedItemsMock } from '@/static/mock'
 
 import MessagesTable from './MessagesTable.vue'
 
@@ -14,10 +14,16 @@ function mountComponent(props = {}): VueWrapper {
 describe('MessagesTable', () => {
     let wrapper: VueWrapper
     beforeEach(() => {
-        wrapper = mountComponent({ items: MqttResponse })
+        wrapper = mountComponent({ publishedItems: publishedItemsMock })
     })
     it('renders component', async () => {
         await wrapper.vm.$nextTick()
         expect(wrapper.find('table').exists()).toBe(true)
+    })
+    it('doesnt component', async () => {
+       const wrapper = mountComponent({})
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find('table').exists()).toBe(false)
+        expect(wrapper.find('.empty').exists()).toBe(true)
     })
 })

@@ -1,6 +1,6 @@
 import type { IQos } from "@/plugins/index.model"
 
-export interface IPublishedItem {
+export interface IPublishedItems {
     [key: number]: {
         topic: string,
         message: string
