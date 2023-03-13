@@ -9,7 +9,7 @@
             <div class="connection-credential">
                 <base-input ref="username" class="connection-credential_input" :model-value="userName" input-name="username"
                     label="Username" @update:modelValue="(newValue: string) => (userName = newValue)" />
-                <base-input ref="password" class="connection-credential_input" :model-value="userPassword"
+                <base-input ref="password" class="connection-credential_input" input-type="password" :model-value="userPassword"
                     input-name="password" label="Password"
                     @update:modelValue="(newValue: string) => (userPassword = newValue)" />
             </div>

@@ -1,10 +1,10 @@
 import { useMQTT } from 'mqtt-vue-hook'
 import type { IQos, IConnectionPayload } from './index.model'
 
-const mqttHook = useMQTT()
-
-
 export const mqttManager = () => {
+    
+    const mqttHook = useMQTT()
+
     const connect = (payload: IConnectionPayload): Promise<void> => {
         const port = 8884
         const hostname = payload.hostname

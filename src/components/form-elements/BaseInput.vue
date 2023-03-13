@@ -3,16 +3,24 @@
     <div v-if="$slots.prefix">
       <slot name="prefix"></slot>
     </div>
-    <input required="true" :name="inputName" :value="modelValue" type="text"
-      @input="$emit('update:modelValue',($event.target as HTMLInputElement).value)" :placeholder="label"
-      class="input" autocomplete="none" />
+    <input ref="passwordRef" required="true" :name="inputName" :value="modelValue" :type="inputType"
+      @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" :placeholder="label" class="input"
+      autocomplete="none" />
     <div v-if="$slots.suffix">
       <slot name="suffix"></slot>
     </div>
+    <button @click="switchVisibility" v-else-if="inputType === 'password'">
+      <eye-icon />
+    </button>
   </div>
 </template>
-<script lang="ts"  >
+<script lang="ts" >
+import { ref } from 'vue'
+import EyeIcon from '@/components/icons/EyeIcon.vue'
 export default {
+  components: {
+    EyeIcon
+  },
   props: {
     modelValue: {
       type: String,
@@ -21,6 +29,10 @@ export default {
     label: {
       type: String,
       required: true
+    },
+    inputType: {
+      type: String,
+      default: 'text'
     },
     inputName: {
       type: String,
@@ -31,7 +43,25 @@ export default {
       default: false
     }
   },
-  emits: ['update:modelValue']
+  emits: ['update:modelValue'],
+  setup() {
+    const passwordRef = ref<null | HTMLInputElement>(null)
+    const switchVisibility = function () {
+      if (!passwordRef.value) {
+        return
+      }
+
+      if (passwordRef.value.type === "password") {
+        passwordRef.value.type = "text";
+      } else {
+        passwordRef.value.type = "password";
+      }
+    }
+    return {
+      passwordRef,
+      switchVisibility
+    }
+  },
 }
 </script>
 
